@@ -26,14 +26,16 @@
   (lambda (exp env)
     (pmatch exp
       [,b (guard (boolean? b)) b]
-      [,n (guard (number? n)) n]      
+      [,n (guard (number? n)) n]
       [(sub1 ,e) (sub1 (eval-exp e env))]
       [(zero? ,e) (zero? (eval-exp e env))]
       [(* ,e1 ,e2) (* (eval-exp e1 env) (eval-exp e2 env))]
       [(if ,e1 ,e2 ,e3) (if (eval-exp e1 env) (eval-exp e2 env) (eval-exp e3 env))]
+;;; run, for miniKanren  
       [(run ,ne (,q) ,ge)
        (run (eval-exp ne env) (q^)
          (eval-exp-mk ge (ext-env env q q^)))]
+;;; lambda calculus      
       [,x (guard (symbol? x)) (lookup x env)]
       [(lambda (,x) ,body) (make-closure x body env)]
       [(,rator ,rand)
